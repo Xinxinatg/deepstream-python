@@ -1,12 +1,16 @@
 FROM nvcr.io/nvidia/deepstream:6.0-devel
-
+RUN apt-get install -y --no-install-recommends wget
+RUN apt-key del 7fa2af80
+RUN rm /etc/apt/sources.list.d/cuda.list
+RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub
+RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/7fa2af80.pub
+RUN apt update
 # To get video driver libraries at runtime (libnvidia-encode.so/libnvcuvid.so)
 ENV NVIDIA_DRIVER_CAPABILITIES $NVIDIA_DRIVER_CAPABILITIES,video
 ENV LOGLEVEL="INFO"
 ENV GST_DEBUG=2
 ENV GST_DEBUG_FILE=/app/output/GST_DEBUG.log
 
-RUN apt update
 RUN apt install -y python3-gi python3-dev python3-gst-1.0 python3-numpy python3-opencv
 
 # Compile Python bindings
